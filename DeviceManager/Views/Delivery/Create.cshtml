@@ -1,0 +1,221 @@
+﻿@model DeviceManager.Models.ViewModels.DeliveryViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Delivery</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.UsernameFromDelivery, null, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("UsernameFromDelivery", Model.UserList, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UsernameFromDelivery, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UsernameToDelivery, null, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("UsernameToDelivery", Model.UserList, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UsernameToDelivery, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Note, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control", @id = "DeliveryNote" } })
+                @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Large modal</button>
+
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.DeliveryDetail.Device.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DeliveryDetail.Device.Unit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DeliveryDetail.Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DeliveryDetail.DateExpires)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DeliveryDetail.Note)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.DeliveryDetails)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Device.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Device.Unit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateExpires)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Note)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+    </div>
+}
+
+@*<div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <input type="button" value="Save" class="btn btn-success" onclick="saveAll()" />
+    </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="model-editor">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Action("Create", "DeliveryDetail")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addDeliveryDetail()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="background-loading" style="display:none">
+
+</div>
+@section Scripts
+{
+    <script type="text/javascript">
+
+        var deliveryDetailList = [];
+
+        function saveAll() {
+            let data = {
+                UsernameFromDelivery: $('#UsernameFromDelivery').val(),
+                UsernameToDelivery: $('#UsernameToDelivery').val(),
+                Note: $('#DeliveryNote').val(),
+                DeliveryDetails: deliveryDetailList
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Create", "Delivery")',
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    location.reload();
+                },
+                error: function (msg) {
+                    console.log(msg);
+                }
+            });
+
+        }
+
+        function deleteDeliveryDetail(id) {
+            if (id === undefined || id < 0) {
+                return;
+            }
+
+            deliveryDetailList.splice(id, 1);
+            loadData();
+        }
+
+        function addDeliveryDetail() {
+            let data = {
+                IDDevice: $('#IDDevice').val(),
+                Quantity: $('#Quantity').val(),
+                DateExpires: $('#DateExpires').val(),
+                Note: $('#Note').val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Create", "DeliveryDetail")',
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    // Update deliveryDetailList:
+                    deliveryDetailList.push(data);
+                    loadData();
+                    formatForm();
+                    $('#model-editor').modal('toggle');
+                },
+                error: function (msg) {
+                    console.log(msg);
+                }
+            });
+
+
+
+        }
+
+        function loadData() {
+
+            $('table.table > tbody > tr.record').each(function () {
+                this.parentNode.removeChild(this);
+            });
+
+            for (let i = 0; i < deliveryDetailList.length; i++) {
+                let data = deliveryDetailList[i];
+
+                let record = '<tr class="record"><td>' + data.Device.Name + '</td><td>' + data.Device.UnitName
+                    + '</td><td>' + data.Quantity + '</td><td>' + data.DateExpires + '</td><td>' + data.Note + '</td><td>'
+                    //+ '<a href="javascript:void(0)" onclick="addDeliveryDetail(' + i + ')">Edit</a> | '
+                    + '<a href="javascript:void(0)" onclick="deleteDeliveryDetail(' + i + ')">Delete</a>'
+                    + '</td></tr >';
+                // Update UI:
+                $('table.table > tbody').append(record);
+            }
+        }
+
+        function formatForm() {
+            $('#Quantity').val(0);
+            $('#Note').val('');
+        }
+
+    </script>
+}
