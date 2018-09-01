@@ -25,7 +25,7 @@ namespace DeviceManager.Models
         public string UsernameToDelivery { get; set; }
         public string CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
-        public string UpdatedDate { get; set; }
+        public Nullable<System.DateTime> UpdatedDate { get; set; }
         public string Note { get; set; }
         public string UpdatedBy { get; set; }
     

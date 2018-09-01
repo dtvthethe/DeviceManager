@@ -10,7 +10,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="Delivery">
           <Key>
@@ -21,9 +21,9 @@
           <Property Name="UsernameToDelivery" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="UpdatedDate" Type="varchar" MaxLength="100" />
-          <Property Name="Note" Type="nchar" MaxLength="10" />
-          <Property Name="UpdatedBy" Type="nchar" MaxLength="10" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="Note" Type="ntext" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="DeliveryDetail">
           <Key>
@@ -36,16 +36,16 @@
           <Property Name="DateExpires" Type="date" Nullable="false" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="UpdatedDate" Type="nchar" MaxLength="10" />
-          <Property Name="Note" Type="nchar" MaxLength="10" />
-          <Property Name="UpdatedBy" Type="nchar" MaxLength="10" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="Note" Type="ntext" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="Device">
           <Key>
@@ -69,8 +69,8 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="Receipt">
           <Key>
@@ -89,7 +89,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IDReceipt" Type="int" Nullable="false" />
           <Property Name="IDDevice" Type="int" Nullable="false" />
           <Property Name="Quantity" Type="int" Nullable="false" />
@@ -104,14 +104,14 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -128,7 +128,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -142,7 +142,7 @@
           <Property Name="IDDepartment" Type="int" Nullable="false" />
           <Property Name="IDRole" Type="int" Nullable="false" />
           <Property Name="Email" Type="varchar" MaxLength="100" />
-          <Property Name="PhoneNumber" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="11" Nullable="false" />
         </EntityType>
         <Association Name="FK_Delivery_User">
           <End Role="User" Type="Self.User" Multiplicity="1" />
@@ -377,7 +377,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Devices" Relationship="Self.FK_Device_Category" FromRole="Category" ToRole="Device" />
         </EntityType>
         <EntityType Name="Delivery">
@@ -389,9 +389,9 @@
           <Property Name="UsernameToDelivery" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedDate" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Note" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="UpdatedBy" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="User" Relationship="Self.FK_Delivery_User" FromRole="Delivery" ToRole="User" />
           <NavigationProperty Name="User1" Relationship="Self.FK_Delivery_User1" FromRole="Delivery" ToRole="User" />
           <NavigationProperty Name="DeliveryDetails" Relationship="Self.FK_DeliveryDetail_Delivery" FromRole="Delivery" ToRole="DeliveryDetail" />
@@ -407,9 +407,9 @@
           <Property Name="DateExpires" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedDate" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="Note" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="UpdatedBy" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Delivery" Relationship="Self.FK_DeliveryDetail_Delivery" FromRole="DeliveryDetail" ToRole="Delivery" />
           <NavigationProperty Name="Device" Relationship="Self.FK_DeliveryDetail_Device" FromRole="DeliveryDetail" ToRole="Device" />
         </EntityType>
@@ -418,7 +418,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Users" Relationship="Self.FK_User_Department" FromRole="Department" ToRole="User" />
         </EntityType>
         <EntityType Name="Device">
@@ -448,8 +448,8 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Receipts" Relationship="Self.FK_Receipt_Provider" FromRole="Provider" ToRole="Receipt" />
         </EntityType>
         <EntityType Name="Receipt">
@@ -472,7 +472,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IDReceipt" Type="Int32" Nullable="false" />
           <Property Name="IDDevice" Type="Int32" Nullable="false" />
           <Property Name="Quantity" Type="Int32" Nullable="false" />
@@ -489,7 +489,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Users" Relationship="Self.FK_User_Role" FromRole="Role" ToRole="User" />
         </EntityType>
         <EntityType Name="Status">
@@ -497,7 +497,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Devices" Relationship="Self.FK_Device_Status" FromRole="Status" ToRole="Device" />
         </EntityType>
         <EntityType Name="sysdiagram">
@@ -515,7 +515,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Devices" Relationship="Self.FK_Device_Unit" FromRole="Unit" ToRole="Device" />
         </EntityType>
         <EntityType Name="User">
@@ -530,7 +530,7 @@
           <Property Name="IDDepartment" Type="Int32" Nullable="false" />
           <Property Name="IDRole" Type="Int32" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Deliveries" Relationship="Self.FK_Delivery_User" FromRole="User" ToRole="Delivery" />
           <NavigationProperty Name="Deliveries1" Relationship="Self.FK_Delivery_User1" FromRole="User" ToRole="Delivery" />
           <NavigationProperty Name="Department" Relationship="Self.FK_User_Department" FromRole="User" ToRole="Department" />

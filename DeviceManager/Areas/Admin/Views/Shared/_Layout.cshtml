@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@Page.Title</title>
+    @RenderSection("head", required: false)
+</head>
+<body>
+    <ul>
+        <li><a href="/Admin/Categories" title="Categories">Categories</a></li>
+        <li><a href="/Admin/Deliveries" title="Deliveries">Deliveries</a></li>
+        <li><a href="/Admin/DeliveryDetails" title="DeliveryDetails">DeliveryDetails</a></li>
+        <li><a href="/Admin/Departments" title="Departments">Departments</a></li>
+        <li><a href="/Admin/Devices" title="Devices">Devices</a></li>
+        <li><a href="/Admin/Providers" title="Providers">Providers</a></li>
+        <li><a href="/Admin/Receipts" title="Receipts">Receipts</a></li>
+        <li><a href="/Admin/ReceiptDetails" title="ReceiptDetails">ReceiptDetails</a></li>
+        <li><a href="/Admin/Roles" title="Roles">Roles</a></li>
+        <li><a href="/Admin/Status" title="Status">Status</a></li>
+        <li><a href="/Admin/Units" title="Units">Units</a></li>
+        <li><a href="/Admin/Users" title="Users">Users</a></li>
+    </ul>
+    @RenderBody()
+</body>
+</html>

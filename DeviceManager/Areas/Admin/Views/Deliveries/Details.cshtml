@@ -1,82 +1,75 @@
 ﻿@model DeviceManager.Models.Delivery
 
 @{
-    Layout = null;
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
+<h2>Details</h2>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Details</title>
-</head>
-<body>
-    <div>
-        <h4>Delivery</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.CreatedBy)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.CreatedBy)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.CreatedDate)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.UpdatedDate)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.UpdatedDate)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Note)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Note)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.UpdatedBy)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.UpdatedBy)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.User.Password)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.User.Password)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.User1.Password)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.User1.Password)
-            </dd>
-    
-        </dl>
-    </div>
-    <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-</body>
-</html>
+<div>
+    <h4>Delivery</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Note)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Note)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Password)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User1.Password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User1.Password)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
