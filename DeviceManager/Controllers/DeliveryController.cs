@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using DeviceManager.Models;
 using AutoMapper;
 using DeviceManager.Models.ViewModels;
+using System.Web.Script.Serialization;
 
 namespace DeviceManager.Controllers
 {
@@ -55,11 +56,50 @@ namespace DeviceManager.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<ActionResult> Create(DeliveryViewModel delivery)
+        public JsonResult Create(DeliveryViewModel delivery)
         {
-            var a = delivery;
-            var aa = 1;
-            return View(delivery);
+            var p = new Page();
+
+            try
+            {
+                var deli = db.Deliveries.Add(new Delivery()
+                {
+                    CreatedBy = "admin",
+                    CreatedDate = DateTime.Now,
+                    Note = delivery.Note,
+                    UsernameFromDelivery = delivery.UsernameFromDelivery,
+                    UsernameToDelivery = delivery.UsernameToDelivery
+                });
+                db.SaveChanges();
+
+                foreach (var item in delivery.DeliveryDetails)
+                {
+                    db.DeliveryDetails.Add(new DeliveryDetail()
+                    {
+                        CreatedBy = "admin",
+                        CreatedDate = DateTime.Now,
+                        DateExpires = Convert.ToDateTime(item.DateExpires),
+                        IDDelivery = deli.ID,
+                        IDDevice = item.IDDevice,
+                        Note = item.Note,
+                        Quantity = item.Quantity,
+                    });
+                }
+
+                db.SaveChanges();
+
+                p.Message = "Lưu thành công";
+                p.MessageLevel = MessageLevel.SUCCESS;
+
+                return Json(p);
+            }
+            catch (Exception ex)
+            {
+                p.Message = "Lưu thất bại: " + ex.Message;
+                p.MessageLevel = MessageLevel.ERROR;
+
+                return Json(p);
+            }
         }
 
         // GET: Deliveries/Edit/5
@@ -69,31 +109,52 @@ namespace DeviceManager.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Delivery delivery = await db.Deliveries.FindAsync(id);
-            if (delivery == null)
+            var deliveryVM = db.Deliveries.Select(_ => new DeliveryViewModel
             {
+                ID = _.ID,
+                Note = _.Note,
+                UsernameFromDelivery = _.UsernameFromDelivery,
+                UsernameToDelivery = _.UsernameToDelivery
+            }).FirstOrDefault(_ => _.ID == id);
+
+            if (deliveryVM == null) {
                 return HttpNotFound();
             }
-            ViewBag.UsernameFromDelivery = new SelectList(db.Users, "Username", "Password", delivery.UsernameFromDelivery);
-            ViewBag.UsernameToDelivery = new SelectList(db.Users, "Username", "Password", delivery.UsernameToDelivery);
-            return View(delivery);
+
+            deliveryVM.UserList = new SelectList(db.Users, "Username", "FullName");
+            deliveryVM.DeliveryDetailEdits = db.DeliveryDetails.Select(_ => new DeliveryDetailEditViewModel()
+            {
+                ID = _.ID,
+                DateExpires = _.DateExpires.ToString(),
+                Device = new DeviceEditViewModel()
+                {
+                    ID = _.Device.ID,
+                    Name = _.Device.Name,
+                    UnitName = _.Device.Unit.Name,
+                },
+                IDDelivery = _.IDDelivery,
+                IDDevice = _.IDDevice,
+                Note = _.Note,
+                Quantity = _.Quantity,
+                Action = ActionEnum.NONE
+            }).Where(_ => _.IDDelivery == id).ToList();
+
+
+
+            var jsonSerialiser = new JavaScriptSerializer();
+            var json = jsonSerialiser.Serialize(deliveryVM.DeliveryDetailEdits);
+            ViewBag.json = json;
+            return View(deliveryVM);
         }
 
         // POST: Deliveries/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ID,UsernameFromDelivery,UsernameToDelivery,CreatedBy,CreatedDate,UpdatedDate,Note,UpdatedBy")] Delivery delivery)
+        public async Task<ActionResult> Edit(DeliveryViewModel delivery)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(delivery).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            ViewBag.UsernameFromDelivery = new SelectList(db.Users, "Username", "Password", delivery.UsernameFromDelivery);
-            ViewBag.UsernameToDelivery = new SelectList(db.Users, "Username", "Password", delivery.UsernameToDelivery);
+            var aa = delivery;
+            var aaa = aa;
             return View(delivery);
         }
 

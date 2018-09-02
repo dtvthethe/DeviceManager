@@ -38,6 +38,7 @@ namespace DeviceManager.Models.ViewModels
 
         public virtual DeviceViewModel Device { get; set; }
 
+        public ActionEnum Action { get; set; }
 
         public SelectList DeviceList { get; set; }
 

@@ -12,4 +12,12 @@ namespace DeviceManager.Models
         SUCCESS,
         INFO
     }
+
+    public enum ActionEnum
+    {
+        ADD,
+        EDIT,
+        DELETE,
+        NONE
+    }
 }

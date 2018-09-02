@@ -11,13 +11,19 @@ namespace DeviceManager.Models.ViewModels
 
         public DeviceEditViewModel Device { get; set; }
 
+        public int ID { get; set; }
+
         public int IDDevice { get; set; }
 
+        public int IDDelivery { get; set; }
+        
         public int Quantity { get; set; }
 
         public string DateExpires { get; set; }
 
         public string Note { get; set; }
+
+        public ActionEnum Action { get; set; }
 
         public Page Page { get; set; }
 

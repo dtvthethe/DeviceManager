@@ -36,5 +36,7 @@ namespace DeviceManager.Models.ViewModels
 
         public virtual ICollection<DeliveryDetailViewModel> DeliveryDetails { get; set; }
 
+        public ICollection<DeliveryDetailEditViewModel> DeliveryDetailEdits { get; set; }
+
     }
 }

@@ -14,9 +14,9 @@ namespace DeviceManager
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             //routes.MapRoute(
-            //    name: "DeliveryDetail",
+            //    name: "Receipt",
             //    url: "{controller}/{action}/{id}",
-            //    defaults: new { controller = "DeliveryDetails", action = "Create", id = UrlParameter.Optional }
+            //    defaults: new { controller = "Receipt", action = "Create", id = UrlParameter.Optional }
             //);
 
             routes.MapRoute(
