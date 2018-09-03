@@ -179,7 +179,6 @@
     <Compile Include="Areas\Admin\Controllers\DepartmentsController.cs" />
     <Compile Include="Areas\Admin\Controllers\DevicesController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProvidersController.cs" />
-    <Compile Include="Areas\Admin\Controllers\ReceiptDetailsController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReceiptsController.cs" />
     <Compile Include="Areas\Admin\Controllers\RolesController.cs" />
     <Compile Include="Areas\Admin\Controllers\StatusController.cs" />
@@ -190,7 +189,6 @@
     <Compile Include="Controllers\DeviceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReceiptController.cs" />
-    <Compile Include="Controllers\ReceiptDetailController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -231,9 +229,6 @@
     <Compile Include="Models\Receipt.cs">
       <DependentUpon>DeviceManager.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ReceiptDetail.cs">
-      <DependentUpon>DeviceManager.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\Role.cs">
       <DependentUpon>DeviceManager.tt</DependentUpon>
     </Compile>
@@ -254,7 +249,6 @@
     <Compile Include="Models\ViewModels\DeliveryViewModel.cs" />
     <Compile Include="Models\ViewModels\DeviceEditViewModel.cs" />
     <Compile Include="Models\ViewModels\DeviceViewModel.cs" />
-    <Compile Include="Models\ViewModels\ReceiptDetailViewModel.cs" />
     <Compile Include="Models\ViewModels\ReceiptViewModel.cs" />
     <Compile Include="Models\ViewModels\ViewModelBase.cs" />
     <Compile Include="Models\Page.cs" />
@@ -269,16 +263,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\DeviceManager.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DeviceManager.edmx</DependentUpon>
-      <LastGenOutput>DeviceManager.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\DeviceManager.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DeviceManager.edmx</DependentUpon>
-      <LastGenOutput>DeviceManager.cs</LastGenOutput>
-    </Content>
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -299,16 +283,6 @@
     <Content Include="Areas\Admin\Views\Departments\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Departments\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Departments\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Devices\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\Devices\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\Devices\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\Devices\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\Devices\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Receipts\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\Receipts\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\Receipts\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\Receipts\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\Receipts\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\Details.cshtml" />
@@ -334,24 +308,22 @@
     <Content Include="Areas\Admin\Views\Categories\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Categories\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Categories\Index.cshtml" />
-    <EntityDeploy Include="Models\DeviceManager.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>DeviceManager.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\DeviceManager.edmx.diagram">
-      <DependentUpon>DeviceManager.edmx</DependentUpon>
-    </Content>
     <Content Include="Areas\Admin\Views\Providers\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Providers\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Providers\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Providers\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Providers\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\ReceiptDetails\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\ReceiptDetails\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\ReceiptDetails\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\ReceiptDetails\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\ReceiptDetails\Index.cshtml" />
     <Content Include="libman.json" />
+    <Content Include="Models\DeviceManager.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DeviceManager.edmx</DependentUpon>
+      <LastGenOutput>DeviceManager.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\DeviceManager.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DeviceManager.edmx</DependentUpon>
+      <LastGenOutput>DeviceManager.cs</LastGenOutput>
+    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\esm\popper-utils.js" />
@@ -370,6 +342,23 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Areas\Admin\Views\Devices\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Devices\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Devices\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Devices\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Devices\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Receipts\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Receipts\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\Receipts\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\Receipts\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Receipts\Index.cshtml" />
+    <EntityDeploy Include="Models\DeviceManager.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DeviceManager.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DeviceManager.edmx.diagram">
+      <DependentUpon>DeviceManager.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -427,11 +416,6 @@
     <Content Include="Views\Receipt\Details.cshtml" />
     <Content Include="Views\Receipt\Edit.cshtml" />
     <Content Include="Views\Receipt\Index.cshtml" />
-    <Content Include="Views\ReceiptDetail\Create.cshtml" />
-    <Content Include="Views\ReceiptDetail\Delete.cshtml" />
-    <Content Include="Views\ReceiptDetail\Details.cshtml" />
-    <Content Include="Views\ReceiptDetail\Edit.cshtml" />
-    <Content Include="Views\ReceiptDetail\Index.cshtml" />
     <Content Include="Views\Device\Create.cshtml" />
     <Content Include="Views\Device\Delete.cshtml" />
     <Content Include="Views\Device\Details.cshtml" />

@@ -35,7 +35,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Note, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control", @id = "ReceiptNote" } })
                 @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -45,28 +45,28 @@
         <table class="table">
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.ReceiptDetail.Device.Name)
+                    @Html.DisplayNameFor(model => model.Device.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ReceiptDetail.Device.Unit)
+                    @Html.DisplayNameFor(model => model.Device.Unit)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ReceiptDetail.Quantity)
+                    @Html.DisplayNameFor(model => model.Device.Quantity)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ReceiptDetail.Note)
+                    @Html.DisplayNameFor(model => model.Device.Note)
                 </th>
                 <th></th>
             </tr>
 
-            @foreach (var item in Model.ReceiptDetails)
+            @foreach (var item in Model.Devices)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Device.Name)
+                        @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Device.Unit)
+                        @Html.DisplayFor(modelItem => item.Unit.Name)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Quantity)
@@ -110,7 +110,7 @@
                 <h4 class="modal-title">Modal title</h4>
             </div>
             <div class="modal-body">
-                @Html.Action("Create", "ReceiptDetail")
+                @Html.Action("Create", "Device")
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -127,25 +127,25 @@
 {
     <script type="text/javascript">
 
-        var deliveryDetailList = [];
+        var DeviceList = [];
 
         function saveAll() {
             let data = {
-                UsernameFromDelivery: $('#UsernameFromDelivery').val(),
-                UsernameToDelivery: $('#UsernameToDelivery').val(),
-                Note: $('#DeliveryNote').val(),
-                DeliveryDetails: deliveryDetailList
+                UsernameReceipt: $('#UsernameReceipt').val(),
+                IDProvider: $('#IDProvider').val(),
+                Note: $('#ReceiptNote').val(),
+                Devices: DeviceList
             };
 
             $.ajax({
                 type: "POST",
-                url: '@Url.Action("Create", "Delivery")',
+                url: '@Url.Action("Create", "Receipt")',
                 data: JSON.stringify(data),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
-
-                    location.reload();
+                    // location.reload();
+                    console.log(data);
                 },
                 error: function (msg) {
                     console.log(msg);
@@ -159,29 +159,33 @@
                 return;
             }
 
-            deliveryDetailList.splice(id, 1);
+            DeviceList.splice(id, 1);
             loadData();
         }
 
         function addDeliveryDetail() {
             let data = {
-                IDDevice: $('#IDDevice').val(),
+                Name: $('#Name').val(),
                 Quantity: $('#Quantity').val(),
-                DateExpires: $('#DateExpires').val(),
-                Note: $('#Note').val()
+                IDCategory: $('#IDCategory').val(),
+                IDUnit: $('#IDUnit').val(),
+                IDStatus: $('#IDStatus').val(),
+                Price: $('#Price').val(),
+                Info: $('#Info').val(),
+                Note: $('#Note').val(),
             };
 
             $.ajax({
                 type: "POST",
-                url: '@Url.Action("Create", "DeliveryDetail")',
+                url: '@Url.Action("Create", "Device")',
                 data: JSON.stringify(data),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
 
-                    // Update deliveryDetailList:
-                    deliveryDetailList.push(data);
-                    loadData();
+                    // Update DeviceList:
+                    DeviceList.push(data);
+                     loadData();
                     formatForm();
                     $('#model-editor').modal('toggle');
                 },
@@ -189,8 +193,6 @@
                     console.log(msg);
                 }
             });
-
-
 
         }
 
@@ -200,11 +202,11 @@
                 this.parentNode.removeChild(this);
             });
 
-            for (let i = 0; i < deliveryDetailList.length; i++) {
-                let data = deliveryDetailList[i];
+            for (let i = 0; i < DeviceList.length; i++) {
+                let data = DeviceList[i];
 
-                let record = '<tr class="record"><td>' + data.Device.Name + '</td><td>' + data.Device.UnitName
-                    + '</td><td>' + data.Quantity + '</td><td>' + data.DateExpires + '</td><td>' + data.Note + '</td><td>'
+                let record = '<tr class="record"><td>' + data.Name + '</td><td>' + data.Unit.Name
+                    + '</td><td>' + data.Quantity + '</td><td>' + data.Note + '</td><td>'
                     //+ '<a href="javascript:void(0)" onclick="addDeliveryDetail(' + i + ')">Edit</a> | '
                     + '<a href="javascript:void(0)" onclick="deleteDeliveryDetail(' + i + ')">Delete</a>'
                     + '</td></tr >';
@@ -214,7 +216,13 @@
         }
 
         function formatForm() {
+            $('#Name').val('');
             $('#Quantity').val(0);
+            $("#IDCategory").val($("#IDCategory option:first").val());
+            $("#IDUnit").val($("#IDUnit option:first").val());
+            $("#IDStatus").val($("#IDStatus option:first").val());
+            $('#Price').val('');
+            $('#Info').val('');
             $('#Note').val('');
         }
 

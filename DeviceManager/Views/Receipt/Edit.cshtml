@@ -1,82 +1,98 @@
-﻿@model DeviceManager.Models.Receipt
+﻿@model DeviceManager.Models.ViewModels.ReceiptViewModel
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
+<h2>Create</h2>
 
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Receipt</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ID)
-
         <div class="form-group">
-            @Html.LabelFor(model => model.UsernameReceipt, "UsernameReceipt", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.UsernameReceipt, null, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("UsernameReceipt", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("UsernameReceipt", Model.UserList, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.UsernameReceipt, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IDProvider, "IDProvider", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.IDProvider, null, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("IDProvider", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("IDProvider", Model.ProviderList, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.IDProvider, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreatedBy, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CreatedBy, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CreatedBy, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CreatedDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CreatedDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CreatedDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.UpdatedDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UpdatedDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UpdatedDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Note, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control", @id = "ReceiptNote" } })
                 @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.UpdatedBy, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.UpdatedBy, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.UpdatedBy, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Large modal</button>
 
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Device.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Device.Unit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Device.Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Device.Note)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.Devices)
+            {
+                <tr class="record">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Unit.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Note)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+
+        @*<div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>*@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="button" value="Save" class="btn btn-success" onclick="saveAll()" />
             </div>
         </div>
     </div>
@@ -86,6 +102,154 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="model-editor">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Action("Create", "Device")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addDevice()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="background-loading" style="display:none">
+
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+        var DeviceList = [];
+        initData();
+
+        function initData() {
+            DeviceList =  @Html.Raw(ViewBag.json);
+        }
+
+        function saveAll() {
+            let data = {
+                UsernameReceipt: $('#UsernameReceipt').val(),
+                IDProvider: $('#IDProvider').val(),
+                Note: $('#ReceiptNote').val(),
+                Devices: DeviceList
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Create", "Receipt")',
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    // location.reload();
+                    console.log(data);
+                },
+                error: function (msg) {
+                    console.log(msg);
+                }
+            });
+
+        }
+
+        function deleteDevice(index) {
+            if (index !== undefined && index >= 0) {
+                // Add new:
+                if (DeviceList[index].Action == 0) {
+                    DeviceList.splice(index, 1);
+                }
+                else {
+                    DeviceList[index].Action = 2
+                }
+
+                loadData();
+            }
+        }
+
+
+        function addDevice() {
+            let data = {
+                Name: $('#Name').val(),
+                Quantity: $('#Quantity').val(),
+                IDCategory: $('#IDCategory').val(),
+                IDUnit: $('#IDUnit').val(),
+                IDStatus: $('#IDStatus').val(),
+                Price: $('#Price').val(),
+                Info: $('#Info').val(),
+                Note: $('#Note').val(),
+                Action: 0
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Create", "Device")',
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    // Update DeviceList:
+                    DeviceList.push(data);
+                    console.log(data);
+                     loadData();
+                    formatForm();
+                    $('#model-editor').modal('toggle');
+                },
+                error: function (msg) {
+                    console.log(msg);
+                }
+            });
+
+        }
+
+        function loadData() {
+
+            $('table.table > tbody > tr.record').each(function () {
+                this.parentNode.removeChild(this);
+            });
+
+            for (let i = 0; i < DeviceList.length; i++) {
+                let data = DeviceList[i];
+                let record = '';
+
+                if (DeviceList[i].Action == 0) {
+                    record = '<tr class="record"><td>' + data.Name + '</td><td>' + data.Unit.Name
+                        + '</td><td>' + data.Quantity + '</td><td>' + data.Note + '</td><td>'
+                        + '<a href="javascript:void(0)" onclick="deleteDevice(' + i + ')">Delete</a>'
+                        + '</td></tr >';
+                }
+                else if (DeviceList[i].Action == 1 || DeviceList[i].Action == 3) {
+                    record = '<tr class="record"><td>' + data.Name + '</td><td>' + data.Unit.Name
+                        + '</td><td>' + data.Quantity + '</td><td>' + data.Note + '</td><td>'
+                        + '<a href="javascript:void(0)" onclick="">Edit</a> | '
+                        + '<a href="javascript:void(0)" onclick="deleteDevice(' + i + ')">Delete</a>'
+                        + '</td></tr >';
+                }
+                else {
+                    record = '';
+                }
+
+                // Update UI:
+                $('table.table > tbody').append(record);
+            }
+        }
+
+        function formatForm() {
+            $('#Name').val('');
+            $('#Quantity').val(0);
+            $("#IDCategory").val($("#IDCategory option:first").val());
+            $("#IDUnit").val($("#IDUnit option:first").val());
+            $("#IDStatus").val($("#IDStatus option:first").val());
+            $('#Price').val('');
+            $('#Info').val('');
+            $('#Note').val('');
+        }
+
+    </script>
 }

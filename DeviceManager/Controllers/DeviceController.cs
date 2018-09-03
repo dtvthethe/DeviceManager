@@ -8,6 +8,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DeviceManager.Models;
+using DeviceManager.Models.ViewModels;
+using AutoMapper;
 
 namespace DeviceManager.Controllers
 {
@@ -38,32 +40,26 @@ namespace DeviceManager.Controllers
         }
 
         // GET: Device/Create
-        public ActionResult Create()
+        public PartialViewResult Create()
         {
             ViewBag.IDCategory = new SelectList(db.Categories, "ID", "Name");
             ViewBag.IDStatus = new SelectList(db.Status, "ID", "Name");
             ViewBag.IDUnit = new SelectList(db.Units, "ID", "Name");
-            return View();
+            return PartialView();
         }
 
         // POST: Device/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,Name,Quantity,IDCategory,IDUnit,IDStatus,Price,Info,CreatedBy,CreatedDate,UpdatedDate,Note,UpdatedBy")] Device device)
+        public JsonResult Create(DeviceViewModel device)
         {
-            if (ModelState.IsValid)
-            {
-                db.Devices.Add(device);
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
+            var deviceVM = Mapper.Map<DeviceEditViewModel>(device);
+            deviceVM.Category = Mapper.Map<ViewModelBase>(db.Categories.Find(device.IDCategory));
+            deviceVM.Unit = Mapper.Map<ViewModelBase>(db.Units.Find(device.IDUnit));
+            deviceVM.Status = Mapper.Map<ViewModelBase>(db.Status.Find(device.IDStatus));
 
-            ViewBag.IDCategory = new SelectList(db.Categories, "ID", "Name", device.IDCategory);
-            ViewBag.IDStatus = new SelectList(db.Status, "ID", "Name", device.IDStatus);
-            ViewBag.IDUnit = new SelectList(db.Units, "ID", "Name", device.IDUnit);
-            return View(device);
+            return Json(deviceVM);
         }
 
         // GET: Device/Edit/5

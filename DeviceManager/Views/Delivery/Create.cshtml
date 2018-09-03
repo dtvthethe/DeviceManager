@@ -213,7 +213,9 @@
         }
 
         function formatForm() {
+            $("#IDDevice").val($("#IDDevice option:first").val());
             $('#Quantity').val(0);
+            $('#DateExpires').val('');
             $('#Note').val('');
         }
 

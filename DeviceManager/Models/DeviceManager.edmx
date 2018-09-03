@@ -57,6 +57,7 @@
           <Property Name="IDCategory" Type="int" Nullable="false" />
           <Property Name="IDUnit" Type="int" Nullable="false" />
           <Property Name="IDStatus" Type="int" Nullable="false" />
+          <Property Name="IDReceipt" Type="int" Nullable="false" />
           <Property Name="Price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="Info" Type="ntext" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
@@ -79,20 +80,6 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UsernameReceipt" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="IDProvider" Type="int" Nullable="false" />
-          <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="UpdatedDate" Type="datetime" />
-          <Property Name="Note" Type="ntext" />
-          <Property Name="UpdatedBy" Type="varchar" MaxLength="100" />
-        </EntityType>
-        <EntityType Name="ReceiptDetail">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IDReceipt" Type="int" Nullable="false" />
-          <Property Name="IDDevice" Type="int" Nullable="false" />
-          <Property Name="Quantity" Type="int" Nullable="false" />
           <Property Name="CreatedBy" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="UpdatedDate" Type="datetime" />
@@ -204,6 +191,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Device_Receipt">
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="1" />
+          <End Role="Device" Type="Self.Device" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Receipt">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Device">
+              <PropertyRef Name="IDReceipt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Device_Status">
           <End Role="Status" Type="Self.Status" Multiplicity="1" />
           <End Role="Device" Type="Self.Device" Multiplicity="*" />
@@ -252,30 +251,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ReceiptDetail_Device">
-          <End Role="Device" Type="Self.Device" Multiplicity="1" />
-          <End Role="ReceiptDetail" Type="Self.ReceiptDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Device">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ReceiptDetail">
-              <PropertyRef Name="IDDevice" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ReceiptDetail_Receipt">
-          <End Role="Receipt" Type="Self.Receipt" Multiplicity="1" />
-          <End Role="ReceiptDetail" Type="Self.ReceiptDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Receipt">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ReceiptDetail">
-              <PropertyRef Name="IDReceipt" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_User_Department">
           <End Role="Department" Type="Self.Department" Multiplicity="1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
@@ -308,7 +283,6 @@
           <EntitySet Name="Device" EntityType="Self.Device" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Provider" EntityType="Self.Provider" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Receipt" EntityType="Self.Receipt" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ReceiptDetail" EntityType="Self.ReceiptDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
@@ -334,6 +308,10 @@
             <End Role="Category" EntitySet="Category" />
             <End Role="Device" EntitySet="Device" />
           </AssociationSet>
+          <AssociationSet Name="FK_Device_Receipt" Association="Self.FK_Device_Receipt">
+            <End Role="Receipt" EntitySet="Receipt" />
+            <End Role="Device" EntitySet="Device" />
+          </AssociationSet>
           <AssociationSet Name="FK_Device_Status" Association="Self.FK_Device_Status">
             <End Role="Status" EntitySet="Status" />
             <End Role="Device" EntitySet="Device" />
@@ -349,14 +327,6 @@
           <AssociationSet Name="FK_Receipt_User" Association="Self.FK_Receipt_User">
             <End Role="User" EntitySet="User" />
             <End Role="Receipt" EntitySet="Receipt" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ReceiptDetail_Device" Association="Self.FK_ReceiptDetail_Device">
-            <End Role="Device" EntitySet="Device" />
-            <End Role="ReceiptDetail" EntitySet="ReceiptDetail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ReceiptDetail_Receipt" Association="Self.FK_ReceiptDetail_Receipt">
-            <End Role="Receipt" EntitySet="Receipt" />
-            <End Role="ReceiptDetail" EntitySet="ReceiptDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_User_Department" Association="Self.FK_User_Department">
             <End Role="Department" EntitySet="Department" />
@@ -431,6 +401,7 @@
           <Property Name="IDCategory" Type="Int32" Nullable="false" />
           <Property Name="IDUnit" Type="Int32" Nullable="false" />
           <Property Name="IDStatus" Type="Int32" Nullable="false" />
+          <Property Name="IDReceipt" Type="Int32" Nullable="false" />
           <Property Name="Price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="Info" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
@@ -440,9 +411,9 @@
           <Property Name="UpdatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Category" Relationship="Self.FK_Device_Category" FromRole="Device" ToRole="Category" />
           <NavigationProperty Name="DeliveryDetails" Relationship="Self.FK_DeliveryDetail_Device" FromRole="Device" ToRole="DeliveryDetail" />
+          <NavigationProperty Name="Receipt" Relationship="Self.FK_Device_Receipt" FromRole="Device" ToRole="Receipt" />
           <NavigationProperty Name="Status" Relationship="Self.FK_Device_Status" FromRole="Device" ToRole="Status" />
           <NavigationProperty Name="Unit" Relationship="Self.FK_Device_Unit" FromRole="Device" ToRole="Unit" />
-          <NavigationProperty Name="ReceiptDetails" Relationship="Self.FK_ReceiptDetail_Device" FromRole="Device" ToRole="ReceiptDetail" />
         </EntityType>
         <EntityType Name="Provider">
           <Key>
@@ -464,25 +435,9 @@
           <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
           <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UpdatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Devices" Relationship="Self.FK_Device_Receipt" FromRole="Receipt" ToRole="Device" />
           <NavigationProperty Name="Provider" Relationship="Self.FK_Receipt_Provider" FromRole="Receipt" ToRole="Provider" />
           <NavigationProperty Name="User" Relationship="Self.FK_Receipt_User" FromRole="Receipt" ToRole="User" />
-          <NavigationProperty Name="ReceiptDetails" Relationship="Self.FK_ReceiptDetail_Receipt" FromRole="Receipt" ToRole="ReceiptDetail" />
-        </EntityType>
-        <EntityType Name="ReceiptDetail">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IDReceipt" Type="Int32" Nullable="false" />
-          <Property Name="IDDevice" Type="Int32" Nullable="false" />
-          <Property Name="Quantity" Type="Int32" Nullable="false" />
-          <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
-          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="UpdatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Device" Relationship="Self.FK_ReceiptDetail_Device" FromRole="ReceiptDetail" ToRole="Device" />
-          <NavigationProperty Name="Receipt" Relationship="Self.FK_ReceiptDetail_Receipt" FromRole="ReceiptDetail" ToRole="Receipt" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -609,6 +564,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Device_Receipt">
+          <End Role="Receipt" Type="Self.Receipt" Multiplicity="1" />
+          <End Role="Device" Type="Self.Device" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Receipt">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Device">
+              <PropertyRef Name="IDReceipt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Device_Status">
           <End Role="Status" Type="Self.Status" Multiplicity="1" />
           <End Role="Device" Type="Self.Device" Multiplicity="*" />
@@ -630,18 +597,6 @@
             </Principal>
             <Dependent Role="Device">
               <PropertyRef Name="IDUnit" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ReceiptDetail_Device">
-          <End Role="Device" Type="Self.Device" Multiplicity="1" />
-          <End Role="ReceiptDetail" Type="Self.ReceiptDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Device">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ReceiptDetail">
-              <PropertyRef Name="IDDevice" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -669,18 +624,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ReceiptDetail_Receipt">
-          <End Role="Receipt" Type="Self.Receipt" Multiplicity="1" />
-          <End Role="ReceiptDetail" Type="Self.ReceiptDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Receipt">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="ReceiptDetail">
-              <PropertyRef Name="IDReceipt" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_User_Role">
           <End Role="Role" Type="Self.Role" Multiplicity="1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
@@ -701,7 +644,6 @@
           <EntitySet Name="Devices" EntityType="Self.Device" />
           <EntitySet Name="Providers" EntityType="Self.Provider" />
           <EntitySet Name="Receipts" EntityType="Self.Receipt" />
-          <EntitySet Name="ReceiptDetails" EntityType="Self.ReceiptDetail" />
           <EntitySet Name="Roles" EntityType="Self.Role" />
           <EntitySet Name="Status" EntityType="Self.Status" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
@@ -731,6 +673,10 @@
             <End Role="Department" EntitySet="Departments" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
+          <AssociationSet Name="FK_Device_Receipt" Association="Self.FK_Device_Receipt">
+            <End Role="Receipt" EntitySet="Receipts" />
+            <End Role="Device" EntitySet="Devices" />
+          </AssociationSet>
           <AssociationSet Name="FK_Device_Status" Association="Self.FK_Device_Status">
             <End Role="Status" EntitySet="Status" />
             <End Role="Device" EntitySet="Devices" />
@@ -739,10 +685,6 @@
             <End Role="Unit" EntitySet="Units" />
             <End Role="Device" EntitySet="Devices" />
           </AssociationSet>
-          <AssociationSet Name="FK_ReceiptDetail_Device" Association="Self.FK_ReceiptDetail_Device">
-            <End Role="Device" EntitySet="Devices" />
-            <End Role="ReceiptDetail" EntitySet="ReceiptDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_Receipt_Provider" Association="Self.FK_Receipt_Provider">
             <End Role="Provider" EntitySet="Providers" />
             <End Role="Receipt" EntitySet="Receipts" />
@@ -750,10 +692,6 @@
           <AssociationSet Name="FK_Receipt_User" Association="Self.FK_Receipt_User">
             <End Role="User" EntitySet="Users" />
             <End Role="Receipt" EntitySet="Receipts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ReceiptDetail_Receipt" Association="Self.FK_ReceiptDetail_Receipt">
-            <End Role="Receipt" EntitySet="Receipts" />
-            <End Role="ReceiptDetail" EntitySet="ReceiptDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
             <End Role="Role" EntitySet="Roles" />
@@ -821,6 +759,7 @@
                 <ScalarProperty Name="IDCategory" ColumnName="IDCategory" />
                 <ScalarProperty Name="IDUnit" ColumnName="IDUnit" />
                 <ScalarProperty Name="IDStatus" ColumnName="IDStatus" />
+                <ScalarProperty Name="IDReceipt" ColumnName="IDReceipt" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Info" ColumnName="Info" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
@@ -845,21 +784,6 @@
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="UsernameReceipt" ColumnName="UsernameReceipt" />
                 <ScalarProperty Name="IDProvider" ColumnName="IDProvider" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ReceiptDetails">
-            <EntityTypeMapping TypeName="DeviceManagerDBModel.ReceiptDetail">
-              <MappingFragment StoreEntitySet="ReceiptDetail">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="IDReceipt" ColumnName="IDReceipt" />
-                <ScalarProperty Name="IDDevice" ColumnName="IDDevice" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />

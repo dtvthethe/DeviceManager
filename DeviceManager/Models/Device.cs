@@ -18,7 +18,6 @@ namespace DeviceManager.Models
         public Device()
         {
             this.DeliveryDetails = new HashSet<DeliveryDetail>();
-            this.ReceiptDetails = new HashSet<ReceiptDetail>();
         }
     
         public int ID { get; set; }
@@ -27,6 +26,7 @@ namespace DeviceManager.Models
         public int IDCategory { get; set; }
         public int IDUnit { get; set; }
         public int IDStatus { get; set; }
+        public int IDReceipt { get; set; }
         public decimal Price { get; set; }
         public string Info { get; set; }
         public string CreatedBy { get; set; }
@@ -38,9 +38,8 @@ namespace DeviceManager.Models
         public virtual Category Category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DeliveryDetail> DeliveryDetails { get; set; }
+        public virtual Receipt Receipt { get; set; }
         public virtual Status Status { get; set; }
         public virtual Unit Unit { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ReceiptDetail> ReceiptDetails { get; set; }
     }
 }

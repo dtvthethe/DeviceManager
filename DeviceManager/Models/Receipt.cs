@@ -17,7 +17,7 @@ namespace DeviceManager.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Receipt()
         {
-            this.ReceiptDetails = new HashSet<ReceiptDetail>();
+            this.Devices = new HashSet<Device>();
         }
     
         public int ID { get; set; }
@@ -29,9 +29,9 @@ namespace DeviceManager.Models
         public string Note { get; set; }
         public string UpdatedBy { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Device> Devices { get; set; }
         public virtual Provider Provider { get; set; }
         public virtual User User { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ReceiptDetail> ReceiptDetails { get; set; }
     }
 }

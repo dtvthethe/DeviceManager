@@ -37,8 +37,11 @@ namespace DeviceManager.Models.ViewModels
         public SelectList ProviderList { get; set; }
 
         //Get header only:
-        public ReceiptDetailViewModel ReceiptDetail;
+        public DeviceViewModel Device;
 
-        public ICollection<ReceiptDetailViewModel> ReceiptDetails { get; set; }
+        public ICollection<DeviceViewModel> Devices { get; set; }
+
+        public ICollection<DeviceEditViewModel> DeviceEdits { get; set; }
+
     }
 }

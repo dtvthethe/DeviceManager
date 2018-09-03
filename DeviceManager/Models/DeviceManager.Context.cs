@@ -32,7 +32,6 @@ namespace DeviceManager.Models
         public virtual DbSet<Device> Devices { get; set; }
         public virtual DbSet<Provider> Providers { get; set; }
         public virtual DbSet<Receipt> Receipts { get; set; }
-        public virtual DbSet<ReceiptDetail> ReceiptDetails { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Status> Status { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }

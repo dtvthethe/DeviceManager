@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
+using AutoMapper;
 using DeviceManager.Models;
 using DeviceManager.Models.ViewModels;
 
@@ -42,8 +44,8 @@ namespace DeviceManager.Controllers
         {
             var receipt = new ReceiptViewModel();
             receipt.ProviderList = new SelectList(db.Providers, "ID", "Name");
-            receipt.UserList = new SelectList(db.Users, "Username", "Username");
-            receipt.ReceiptDetails = new List<ReceiptDetailViewModel>();
+            receipt.UserList = new SelectList(db.Users, "Username", "FullName");
+            receipt.Devices = new List<DeviceViewModel>();
 
             return View(receipt);
         }
@@ -52,19 +54,55 @@ namespace DeviceManager.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,UsernameReceipt,IDProvider,CreatedBy,CreatedDate,UpdatedDate,Note,UpdatedBy")] Receipt receipt)
+        public JsonResult Create(ReceiptViewModel receipt)
         {
-            if (ModelState.IsValid)
+            var p = new Page();
+            try
             {
-                db.Receipts.Add(receipt);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
 
-            ViewBag.IDProvider = new SelectList(db.Providers, "ID", "Name", receipt.IDProvider);
-            ViewBag.UsernameReceipt = new SelectList(db.Users, "Username", "Password", receipt.UsernameReceipt);
-            return View(receipt);
+                // Save Receipt:
+                var rec = db.Receipts.Add(new Receipt
+                {
+                    UsernameReceipt = receipt.UsernameReceipt,
+                    IDProvider = receipt.IDProvider,
+                    Note = receipt.Note,
+                    CreatedBy = "admin",
+                    CreatedDate = DateTime.Now
+                });
+                db.SaveChanges();
+
+                // Save Device:
+                foreach (var item in receipt.Devices)
+                {
+                    db.Devices.Add(new Device()
+                    {
+                        CreatedBy = "admin",
+                        CreatedDate = DateTime.Now,
+                        Info = item.Info,
+                        Name = item.Name,
+                        Note = item.Note,
+                        Price = item.Price,
+                        Quantity = item.Quantity,
+                        IDReceipt = rec.ID,
+                        IDCategory = item.Category.ID,
+                        IDStatus = item.Status.ID,
+                        IDUnit = item.Unit.ID,
+                    });
+                }
+                db.SaveChanges();
+
+                p.Message = "Lưu thành công";
+                p.MessageLevel = MessageLevel.SUCCESS;
+
+                return Json(p);
+            }
+            catch (Exception ex)
+            {
+                p.Message = "Lưu thất bại: " + ex.Message;
+                p.MessageLevel = MessageLevel.ERROR;
+
+                return Json(p); ;
+            }
         }
 
         // GET: Receipt/Edit/5
@@ -74,13 +112,35 @@ namespace DeviceManager.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Receipt receipt = db.Receipts.Find(id);
+            var receipt = Mapper.Map<ReceiptViewModel>(db.Receipts.Find(id));
             if (receipt == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.IDProvider = new SelectList(db.Providers, "ID", "Name", receipt.IDProvider);
-            ViewBag.UsernameReceipt = new SelectList(db.Users, "Username", "Password", receipt.UsernameReceipt);
+            receipt.ProviderList = new SelectList(db.Providers, "ID", "Name");
+            receipt.UserList = new SelectList(db.Users, "Username", "FullName");
+            receipt.DeviceEdits = db.Devices.Select(_ => new DeviceEditViewModel()
+            {
+                ID = _.ID,
+                //Category = Mapper.Map<ViewModelBase>(_.Category),
+                //Status = Mapper.Map<ViewModelBase>(_.Status),
+                Unit = new ViewModelBase() {
+                    ID = _.Unit.ID,
+                    Name = _.Unit.Name
+                },
+                IDReceipt = _.IDReceipt,
+                Info = _.Info,
+                Name = _.Name,
+                Note = _.Note,
+                Price = _.Price,
+                Quantity = _.Quantity,
+                Action = ActionEnum.NONE
+            }).Where(_=> _.IDReceipt == id).ToList();
+
+            var jsonSerialiser = new JavaScriptSerializer();
+            var json = jsonSerialiser.Serialize(receipt.DeviceEdits);
+            ViewBag.json = json;
+
             return View(receipt);
         }
 
@@ -88,17 +148,9 @@ namespace DeviceManager.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,UsernameReceipt,IDProvider,CreatedBy,CreatedDate,UpdatedDate,Note,UpdatedBy")] Receipt receipt)
+        public ActionResult Edit(ReceiptViewModel receipt)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(receipt).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.IDProvider = new SelectList(db.Providers, "ID", "Name", receipt.IDProvider);
-            ViewBag.UsernameReceipt = new SelectList(db.Users, "Username", "Password", receipt.UsernameReceipt);
+            
             return View(receipt);
         }
 

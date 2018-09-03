@@ -20,7 +20,13 @@ namespace DeviceManager.App_Start
                 cfg.CreateMap<DeliveryDetail, DeliveryDetailViewModel>();
                 cfg.CreateMap<DeliveryViewModel, Delivery>();
                 cfg.CreateMap<DeliveryDetailViewModel, DeliveryDetail>();
-
+                cfg.CreateMap<Category, ViewModelBase>();
+                cfg.CreateMap<Unit, ViewModelBase>();
+                cfg.CreateMap<Status, ViewModelBase>();
+                cfg.CreateMap<Device, DeviceViewModel>();
+                cfg.CreateMap<Receipt, ReceiptViewModel>();
+                cfg.CreateMap<DeviceViewModel, DeviceEditViewModel>();
+                cfg.CreateMap<DeviceEditViewModel, DeviceViewModel>();
             });
         }
     }

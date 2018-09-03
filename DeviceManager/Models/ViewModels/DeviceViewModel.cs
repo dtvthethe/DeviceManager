@@ -22,6 +22,8 @@ namespace DeviceManager.Models.ViewModels
 
         public int IDStatus { get; set; }
 
+        public int IDReceipt { get; set; }
+
         [Display(Name = "Giá")]
         public decimal Price { get; set; }
 
@@ -49,7 +51,7 @@ namespace DeviceManager.Models.ViewModels
         [Display(Name = "Đơn vị tính")]
         public virtual Unit Unit { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ReceiptDetail> ReceiptDetails { get; set; }
+        public virtual Receipt Receipt { get; set; }
+
     }
 }
