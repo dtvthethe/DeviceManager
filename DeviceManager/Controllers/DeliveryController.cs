@@ -11,9 +11,11 @@ using DeviceManager.Models;
 using AutoMapper;
 using DeviceManager.Models.ViewModels;
 using System.Web.Script.Serialization;
+using DeviceManager.Decorators;
 
 namespace DeviceManager.Controllers
 {
+    [SessionAuthorize]
     public class DeliveryController : Controller
     {
         private DeviceManagerDBEntities db = new DeviceManagerDBEntities();
@@ -117,7 +119,8 @@ namespace DeviceManager.Controllers
                 UsernameToDelivery = _.UsernameToDelivery
             }).FirstOrDefault(_ => _.ID == id);
 
-            if (deliveryVM == null) {
+            if (deliveryVM == null)
+            {
                 return HttpNotFound();
             }
 
@@ -151,11 +154,69 @@ namespace DeviceManager.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<ActionResult> Edit(DeliveryViewModel delivery)
+        public JsonResult Edit(DeliveryViewModel delivery)
         {
-            var aa = delivery;
-            var aaa = aa;
-            return View(delivery);
+            var p = new Page();
+
+            try
+            {
+                var d = db.Deliveries.Find(delivery.ID);
+                d.Note = delivery.Note;
+                d.UpdatedBy = "admin";
+                d.UpdatedDate = DateTime.Now;
+                d.UsernameFromDelivery = delivery.UsernameFromDelivery;
+                d.UsernameToDelivery = delivery.UsernameToDelivery;
+
+                foreach (var item in delivery.DeliveryDetails)
+                {
+                    switch (item.Action)
+                    {
+                        case ActionEnum.ADD:
+                            var deliver = new DeliveryDetail()
+                            {
+                                CreatedBy = "admin",
+                                CreatedDate = DateTime.Now,
+                                Note = item.Note,
+                                DateExpires = item.DateExpires,
+                                IDDelivery = d.ID,
+                                IDDevice = item.IDDevice,
+                                Quantity = item.Quantity,
+                            };
+                            db.DeliveryDetails.Add(deliver);
+                            break;
+                        case ActionEnum.EDIT:
+                            var deli = db.DeliveryDetails.Find(item.ID);
+                            deli.IDDevice = item.IDDevice;
+                            deli.Note = item.Note;
+                            deli.Quantity = item.Quantity;
+                            deli.DateExpires = item.DateExpires;
+                            deli.UpdatedBy = "admin";
+                            deli.UpdatedDate = DateTime.Now;
+                            break;
+                        case ActionEnum.DELETE:
+                            db.DeliveryDetails.Remove(db.DeliveryDetails.Find(item.ID));
+                            break;
+                        case ActionEnum.NONE:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                db.SaveChanges();
+
+                p.Message = "Lưu thành công";
+                p.MessageLevel = MessageLevel.SUCCESS;
+
+                return Json(p);
+            }
+            catch (Exception ex)
+            {
+                p.Message = "Lưu thất bại: " + ex.Message;
+                p.MessageLevel = MessageLevel.ERROR;
+
+                return Json(p);
+            }
         }
 
         // GET: Deliveries/Delete/5

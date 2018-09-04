@@ -38,5 +38,8 @@ namespace DeviceManager.Models.ViewModels
 
         public ICollection<DeliveryDetailEditViewModel> DeliveryDetailEdits { get; set; }
 
+        public User User { get; set; }
+        public User User1 { get; set; }
+
     }
 }

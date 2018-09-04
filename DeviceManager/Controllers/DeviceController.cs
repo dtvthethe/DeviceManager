@@ -62,6 +62,27 @@ namespace DeviceManager.Controllers
             return Json(deviceVM);
         }
 
+        [HttpGet]
+        public string GetUnitName(int id = 0) {
+            if (id <= 0)
+            {
+                return "ERROR";
+            }
+            else {
+                return db.Devices.Find(id).Unit.Name;
+            }
+        }
+
+        [HttpPost]
+        public PartialViewResult EditPartial(DeviceEditViewModel device)
+        {
+            ViewBag.DeviceIDUnit = new SelectList(db.Units, "ID", "Name", device.IDUnit);
+            ViewBag.DeviceIDStatus = new SelectList(db.Status, "ID", "Name", device.IDStatus);
+            ViewBag.DeviceIDCategory = new SelectList(db.Categories, "ID", "Name", device.IDCategory);
+
+            return PartialView(device);
+        }
+
         // GET: Device/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {

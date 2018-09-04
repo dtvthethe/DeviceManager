@@ -8,14 +8,19 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DeviceManager.Models;
+using DeviceManager.Decorators;
 
 namespace DeviceManager.Areas.Admin.Controllers
 {
+
+    [SessionAuthorize]
     public class DeliveriesController : Controller
     {
+        
         private DeviceManagerDBEntities db = new DeviceManagerDBEntities();
 
         // GET: Admin/Deliveries
+
         public async Task<ActionResult> Index()
         {
             var deliveries = db.Deliveries.Include(d => d.User).Include(d => d.User1);

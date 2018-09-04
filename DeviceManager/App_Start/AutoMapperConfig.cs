@@ -27,6 +27,7 @@ namespace DeviceManager.App_Start
                 cfg.CreateMap<Receipt, ReceiptViewModel>();
                 cfg.CreateMap<DeviceViewModel, DeviceEditViewModel>();
                 cfg.CreateMap<DeviceEditViewModel, DeviceViewModel>();
+                cfg.CreateMap<DeviceEditViewModel, Device>();
             });
         }
     }

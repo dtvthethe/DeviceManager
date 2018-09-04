@@ -1,11 +1,11 @@
 ﻿@model DeviceManager.Models.ViewModels.ReceiptViewModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Thêm mới Nhập kho";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create</h2>
+<h2>Nhập kho</h2>
 
 
 @using (Html.BeginForm())
@@ -13,7 +13,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Receipt</h4>
+        <h4>Thêm mới</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -40,8 +40,8 @@
             </div>
         </div>
 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Large modal</button>
-
+        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">Thêm mới</button>
+        <input type="button" value="Lưu lại" class="btn btn-danger btn-sm" onclick="saveAll()" />
         <table class="table">
             <tr>
                 <th>
@@ -84,22 +84,11 @@
 
         </table>
 
-
-        @*<div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
-            </div>*@
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="Save" class="btn btn-success" onclick="saveAll()" />
-            </div>
-        </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Danh sách Nhập kho", "Index")
 </div>
 
 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="model-editor">
@@ -107,14 +96,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Modal title</h4>
+                <h4 class="modal-title">Thêm mới thiết bị</h4>
             </div>
             <div class="modal-body">
                 @Html.Action("Create", "Device")
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="addDeliveryDetail()">Save changes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" onclick="addDeliveryDetail()">Thêm mới</button>
             </div>
         </div>
     </div>
@@ -208,7 +197,7 @@
                 let record = '<tr class="record"><td>' + data.Name + '</td><td>' + data.Unit.Name
                     + '</td><td>' + data.Quantity + '</td><td>' + data.Note + '</td><td>'
                     //+ '<a href="javascript:void(0)" onclick="addDeliveryDetail(' + i + ')">Edit</a> | '
-                    + '<a href="javascript:void(0)" onclick="deleteDeliveryDetail(' + i + ')">Delete</a>'
+                    + '<a href="javascript:void(0)" onclick="deleteDeliveryDetail(' + i + ')">Xóa</a>'
                     + '</td></tr >';
                 // Update UI:
                 $('table.table > tbody').append(record);

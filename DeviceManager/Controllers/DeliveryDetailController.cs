@@ -91,6 +91,14 @@ namespace DeviceManager.Controllers
             return View(deliveryDetail);
         }
 
+        [HttpPost]
+        public PartialViewResult EditPartial(DeliveryDetailEditViewModel delivery)
+        {
+            ViewBag.DeliveryDeviceID = new SelectList(db.Devices, "ID", "Name", delivery.IDDevice);
+
+            return PartialView(delivery);
+        }
+
         // POST: DeliveryDetail/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.

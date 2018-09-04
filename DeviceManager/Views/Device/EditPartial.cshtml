@@ -1,0 +1,75 @@
+﻿@model DeviceManager.Models.ViewModels.DeviceEditViewModel
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ID)
+    @Html.HiddenFor(model => model.Index)
+    @Html.HiddenFor(model => model.Action)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @id = "DeviceName" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="DeviceIDCategory" class="control-label col-md-2">Tên thiết bị</label>
+        <div class="col-md-10">
+            @Html.DropDownList("DeviceIDCategory", null, htmlAttributes: new { @class = "form-control", @id = "DeviceIDCategory" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="DeviceIDUnit" class="control-label col-md-2">Đơn vị tính</label>
+        <div class="col-md-10">
+            @Html.DropDownList("DeviceIDUnit", null, htmlAttributes: new { @class = "form-control", @id = "DeviceIDUnit" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="DeviceIDStatus" class="control-label col-md-2">Trạng thái</label>
+        <div class="col-md-10">
+            @Html.DropDownList("DeviceIDStatus", null, htmlAttributes: new { @class = "form-control", @id = "DeviceIDStatus" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control", @id = "DeviceQuantity" } })
+            @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", @id = "DevicePrice", @type="number", @min="0" } })
+            @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Info, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Info, new { htmlAttributes = new { @class = "form-control", @id = "DeviceInfo" } })
+            @Html.ValidationMessageFor(model => model.Info, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Note, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control", @id = "DeviceNote" } })
+            @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
+}

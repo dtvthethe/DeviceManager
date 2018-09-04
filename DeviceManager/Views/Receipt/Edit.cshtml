@@ -1,11 +1,11 @@
 ﻿@model DeviceManager.Models.ViewModels.ReceiptViewModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Chi tiết Nhập kho";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create</h2>
+<h2>Nhập kho</h2>
 
 
 @using (Html.BeginForm())
@@ -13,7 +13,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Receipt</h4>
+        <h4>Chi tiết</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -40,8 +40,8 @@
             </div>
         </div>
 
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Large modal</button>
-
+        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target=".bs-example-modal-lg">Thêm mới</button>
+        <input type="button" value="Lưu lại" class="btn btn-danger btn-sm" onclick="saveAll()" />
         <table class="table">
             <tr>
                 <th>
@@ -59,8 +59,9 @@
                 <th></th>
             </tr>
 
-            @foreach (var item in Model.Devices)
+            @for (int i = 0; i < Model.Devices.Count; i++)
             {
+                var item = Model.Devices.ToList()[i];
                 <tr class="record">
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
@@ -75,59 +76,69 @@
                         @Html.DisplayFor(modelItem => item.Note)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                        <a href="javascript:void(0)" data-toggle="modal" data-target=".bs-modal-edit" onclick="loadEdit(@i)">Chi tiết</a>
+                        |
+                        <a href="javascript:void(0)" onclick="deleteDevice(@i)">Xóa</a>
                     </td>
                 </tr>
             }
 
         </table>
-
-
-        @*<div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
-            </div>*@
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="Save" class="btn btn-success" onclick="saveAll()" />
-            </div>
-        </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    <div>
+        @Html.ActionLink("Danh sách Nhập kho", "Index")
+    </div>
+<!--Model Create-->
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="modal-editor">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Thêm mới thiết bị</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Action("Create", "Device")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" onclick="addDevice()">Thêm mới</button>
+            </div>
+        </div>
+    </div>
 </div>
-
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="model-editor">
+<!--End Model Create-->
+<!--Model Edit-->
+<div class="modal fade bs-modal-edit" tabindex="-1" role="dialog" aria-labelledby="modelEdit" id="modal-edit">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Modal title</h4>
             </div>
-            <div class="modal-body">
-                @Html.Action("Create", "Device")
+            <div class="modal-body" id="modal-edit-body">
+                Loading...
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="addDevice()">Save changes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" onclick="saveEdit()">Lưu thay đổi</button>
             </div>
         </div>
     </div>
 </div>
+<!--End Model Edit-->
+
 <div id="background-loading" style="display:none">
 
 </div>
 
 @section Scripts
 {
+    <script src="~/Scripts/Enums.js"></script>
     <script type="text/javascript">
-
         var DeviceList = [];
+
         initData();
 
         function initData() {
@@ -139,18 +150,17 @@
                 UsernameReceipt: $('#UsernameReceipt').val(),
                 IDProvider: $('#IDProvider').val(),
                 Note: $('#ReceiptNote').val(),
-                Devices: DeviceList
+                DeviceEdits: DeviceList
             };
 
             $.ajax({
                 type: "POST",
-                url: '@Url.Action("Create", "Receipt")',
+                url: '@Url.Action("Edit", "Receipt")',
                 data: JSON.stringify(data),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
                     // location.reload();
-                    console.log(data);
                 },
                 error: function (msg) {
                     console.log(msg);
@@ -162,11 +172,11 @@
         function deleteDevice(index) {
             if (index !== undefined && index >= 0) {
                 // Add new:
-                if (DeviceList[index].Action == 0) {
+                if (DeviceList[index].Action == ACTIONS.ADD) {
                     DeviceList.splice(index, 1);
                 }
                 else {
-                    DeviceList[index].Action = 2
+                    DeviceList[index].Action = ACTIONS.DELETE
                 }
 
                 loadData();
@@ -184,7 +194,7 @@
                 Price: $('#Price').val(),
                 Info: $('#Info').val(),
                 Note: $('#Note').val(),
-                Action: 0
+                Action: ACTIONS.ADD
             };
 
             $.ajax({
@@ -196,10 +206,9 @@
                 success: function (data) {
                     // Update DeviceList:
                     DeviceList.push(data);
-                    console.log(data);
                      loadData();
                     formatForm();
-                    $('#model-editor').modal('toggle');
+                    $('#modal-editor').modal('toggle');
                 },
                 error: function (msg) {
                     console.log(msg);
@@ -218,17 +227,11 @@
                 let data = DeviceList[i];
                 let record = '';
 
-                if (DeviceList[i].Action == 0) {
+                if (data.Action != ACTIONS.DELETE) {
                     record = '<tr class="record"><td>' + data.Name + '</td><td>' + data.Unit.Name
                         + '</td><td>' + data.Quantity + '</td><td>' + data.Note + '</td><td>'
-                        + '<a href="javascript:void(0)" onclick="deleteDevice(' + i + ')">Delete</a>'
-                        + '</td></tr >';
-                }
-                else if (DeviceList[i].Action == 1 || DeviceList[i].Action == 3) {
-                    record = '<tr class="record"><td>' + data.Name + '</td><td>' + data.Unit.Name
-                        + '</td><td>' + data.Quantity + '</td><td>' + data.Note + '</td><td>'
-                        + '<a href="javascript:void(0)" onclick="">Edit</a> | '
-                        + '<a href="javascript:void(0)" onclick="deleteDevice(' + i + ')">Delete</a>'
+                        + '<a href="javascript:void(0)" data-toggle="modal" data-target=".bs-modal-edit" onclick="loadEdit('+ i +')">Chi tiết</a> | '
+                        + '<a href="javascript:void(0)" onclick="deleteDevice(' + i + ')">Xóa</a>'
                         + '</td></tr >';
                 }
                 else {
@@ -238,6 +241,56 @@
                 // Update UI:
                 $('table.table > tbody').append(record);
             }
+        }
+
+        // Load editing form:
+        function loadEdit(index) {
+            if (index === undefined || index < 0) {
+                return;
+            }
+            let data = DeviceList[index];
+            data.Index = index;
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("EditPartial", "Device")',
+                data: JSON.stringify(data),
+                dataType: "html",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $('#modal-edit-body').html(data);
+
+                },
+                error: function (msg) {
+                    console.log(msg);
+                }
+            });
+        }
+
+        function saveEdit() {
+
+            let data = DeviceList[$('#Index').val()];
+            data.Index = $('#Index').val();
+            data.Name = $('#DeviceName').val();
+            data.Quantity = $('#DeviceQuantity').val();
+            data.IDUnit = $('#DeviceIDUnit').val();
+            data.IDStatus = $('#DeviceIDStatus').val();
+            data.IDCategory = $('#DeviceIDCategory').val();
+            data.Price = $('#DevicePrice').val();
+            data.Info = $('#DeviceInfo').val();
+            data.Note = $('#DeviceNote').val();
+            data.Unit = {
+                ID: data.IDUnit,
+                Name: $('#DeviceIDUnit option:selected').text()
+            };
+
+            if (data.Action == ACTIONS.NONE) {
+                data.Action = ACTIONS.EDIT;
+            }
+            DeviceList[data.Index] = data;
+            loadData();
+            $('#modal-edit').modal('toggle');
+
         }
 
         function formatForm() {

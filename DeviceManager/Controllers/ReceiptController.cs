@@ -8,13 +8,16 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using AutoMapper;
+using DeviceManager.Decorators;
 using DeviceManager.Models;
 using DeviceManager.Models.ViewModels;
 
 namespace DeviceManager.Controllers
 {
+    [SessionAuthorize]
     public class ReceiptController : Controller
     {
+       
         private DeviceManagerDBEntities db = new DeviceManagerDBEntities();
 
         // GET: Receipt
@@ -101,7 +104,7 @@ namespace DeviceManager.Controllers
                 p.Message = "Lưu thất bại: " + ex.Message;
                 p.MessageLevel = MessageLevel.ERROR;
 
-                return Json(p); ;
+                return Json(p);
             }
         }
 
@@ -122,11 +125,20 @@ namespace DeviceManager.Controllers
             receipt.DeviceEdits = db.Devices.Select(_ => new DeviceEditViewModel()
             {
                 ID = _.ID,
-                //Category = Mapper.Map<ViewModelBase>(_.Category),
-                //Status = Mapper.Map<ViewModelBase>(_.Status),
-                Unit = new ViewModelBase() {
+                Unit = new ViewModelBase()
+                {
                     ID = _.Unit.ID,
                     Name = _.Unit.Name
+                },
+                Category = new ViewModelBase()
+                {
+                    ID = _.Category.ID,
+                    Name = _.Category.Name
+                },
+                Status = new ViewModelBase()
+                {
+                    ID = _.Status.ID,
+                    Name = _.Status.Name
                 },
                 IDReceipt = _.IDReceipt,
                 Info = _.Info,
@@ -134,8 +146,9 @@ namespace DeviceManager.Controllers
                 Note = _.Note,
                 Price = _.Price,
                 Quantity = _.Quantity,
+                IDUnit = _.IDUnit,
                 Action = ActionEnum.NONE
-            }).Where(_=> _.IDReceipt == id).ToList();
+            }).Where(_ => _.IDReceipt == id).ToList();
 
             var jsonSerialiser = new JavaScriptSerializer();
             var json = jsonSerialiser.Serialize(receipt.DeviceEdits);
@@ -148,10 +161,77 @@ namespace DeviceManager.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Edit(ReceiptViewModel receipt)
+        public JsonResult Edit(ReceiptViewModel receipt)
         {
-            
-            return View(receipt);
+            var p = new Page();
+            try
+            {
+                var rec = db.Receipts.Find(receipt.ID);
+                rec.IDProvider = receipt.IDProvider;
+                rec.Note = receipt.Note;
+                rec.UsernameReceipt = receipt.UsernameReceipt;
+                rec.UpdatedBy = "admin";
+                rec.UpdatedDate = DateTime.Now;
+
+                foreach (var item in receipt.DeviceEdits)
+                {
+                    switch (item.Action)
+                    {
+                        case ActionEnum.ADD:
+                            var de = new Device()
+                            {
+                                CreatedBy = "admin",
+                                CreatedDate = DateTime.Now,
+                                IDCategory = item.IDCategory,
+                                IDStatus = item.IDStatus,
+                                IDUnit = item.IDUnit,
+                                Info = item.Info,
+                                Name = item.Name,
+                                Note = item.Note,
+                                Price = item.Price,
+                                Quantity = item.Quantity,
+                                IDReceipt = rec.ID
+                            };
+                            db.Devices.Add(de);
+                            break;
+                        case ActionEnum.EDIT:
+                            var dev = db.Devices.Find(item.ID);
+                            dev.IDCategory = item.Category.ID;
+                            dev.IDStatus = item.Status.ID;
+                            dev.IDUnit = item.Unit.ID;
+                            dev.Info = item.Info;
+                            dev.Name = item.Name;
+                            dev.Note = item.Note;
+                            dev.Price = item.Price;
+                            dev.Quantity = item.Quantity;
+                            dev.UpdatedBy = "admin";
+                            dev.UpdatedDate = DateTime.Now;
+
+                            break;
+                        case ActionEnum.DELETE:
+                            var devi = db.Devices.Find(item.ID);
+                            db.Devices.Remove(devi);
+                            break;
+                        case ActionEnum.NONE:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                db.SaveChanges();
+
+                p.Message = "Lưu thành công";
+                p.MessageLevel = MessageLevel.SUCCESS;
+
+                return Json(p);
+            }
+            catch (Exception ex)
+            {
+                p.Message = "Lưu thất bại: " + ex.Message;
+                p.MessageLevel = MessageLevel.ERROR;
+
+                return Json(p);
+            }
         }
 
         // GET: Receipt/Delete/5
